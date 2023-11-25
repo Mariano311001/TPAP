@@ -12,11 +12,11 @@ function App() {
 
   // Función para crear una nueva tarea
   function createNewTask(newTaskObject) {
-    const palabraRegex = /^[A-Za-z]+$/;
+    const regex = /^[A-Za-z]+$/;
     // Validación del campo tarea
     if(newTaskObject.taskName != "" && newTaskObject.taskName.length > 2)
     {
-      if (palabraRegex.test(newTaskObject.taskName))
+      if (regex.test(newTaskObject.taskName))
       {
         // Verifica si ya existe una tarea con el mismo nombre
           if (!taskItems.find((taskObject) => taskObject.taskName === newTaskObject.taskName)) {
