@@ -10,9 +10,7 @@ import { useState } from 'react';
 
 
 export default function RegistroTarea({createNewTask}) {
-  //2da opcion
   const [values, setValues] = useState({
-    //id : 0,
     tarea : "",
     comentario : "",
     //fecha : "",
