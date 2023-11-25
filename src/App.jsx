@@ -4,6 +4,8 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import TablaListaTareas from './components/tablaListaTareas'
 import ItemsIngresoDatos from './components/registroTarea'
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
 
 function App() {
@@ -11,20 +13,20 @@ function App() {
   const [taskItems, setTaskItems] = useState([]);
 
   // Función para crear una nueva tarea
-  function createNewTask(taskObjeto) {
+  function createNewTask(newTaskObject) {
     const palabraRegex = /^[A-Za-z]+$/;
     // Validación del campo tarea
-    if(taskObjeto.tarea != "" && taskObjeto.tarea.length > 2)
+    if(newTaskObject.taskName != "" && newTaskObject.taskName.length > 2)
     {
-      if (palabraRegex.test(taskObjeto.tarea))
+      if (palabraRegex.test(newTaskObject.taskName))
       {
         // Verifica si ya existe una tarea con el mismo nombre
-          if (!taskItems.find((task) => task.tarea === taskObjeto.tarea)) {
+          if (!taskItems.find((taskObject) => taskObject.taskName === newTaskObject.taskName)) {
             
             // Agrega la nueva tarea al estado previo
             setTaskItems((prevTaskItems) => [
               ...prevTaskItems,
-              { id: taskObjeto.id, tarea: taskObjeto.tarea, comentario: taskObjeto.comentario },
+              { id: newTaskObject.id, taskName: newTaskObject.taskName, comment: newTaskObject.comment },
             ]);
           }else{
             alert("Ya existe el nombre de esta tarea");
@@ -56,7 +58,7 @@ function App() {
   // Nueva función para manejar la eliminación de tareas
   const handleDeleteClick = (selectedIds) => {
     // Filtra las tareas que no están seleccionadas
-    const updatedTasks = taskItems.filter((task) => !selectedIds.includes(task.id));
+    const updatedTasks = taskItems.filter((taskObject) => !selectedIds.includes(taskObject.id));
     // Actualiza el estado con la nueva lista de tareas
     setTaskItems(updatedTasks);
   };
@@ -64,9 +66,16 @@ function App() {
   // Renderiza los componentes ItemsIngresoDatos y TablaListaTareas con los datos actuales
   return (
     <>
-      <ItemsIngresoDatos createNewTask={createNewTask} />
-      {/* Pasa la función handleDeleteClick al componente TablaListaTareas */}
-      <TablaListaTareas registros={taskItems} onDeleteClick={handleDeleteClick} />
+      <h1 className = "titulo">Lista de tareas</h1>
+      <Container maxWidth="md">
+      <Box sx={{ mt: 4 }}>
+        <ItemsIngresoDatos createNewTask={createNewTask} />
+      </Box>
+      <Box sx={{ mt: 4 }}>
+        {/* Pasa la función handleDeleteClick al componente TablaListaTareas */}
+        <TablaListaTareas taskItems={taskItems} onDeleteClick={handleDeleteClick} />
+      </Box>
+    </Container>
     </>
   );
 }

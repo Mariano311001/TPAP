@@ -13,7 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 // Define el componente funcional TablaListaTareas
-function TablaListaTareas({ registros, onDeleteClick }) {
+function TablaListaTareas({ taskItems, onDeleteClick }) {
   // Define una clave para el almacenamiento local
   const STORAGE_KEY = 'selectedItems';
 
@@ -86,17 +86,17 @@ function TablaListaTareas({ registros, onDeleteClick }) {
             <TableRow>
               <TableCell>
                 {/* Checkbox para seleccionar/deseleccionar todos */}
-                {/*<Checkbox
-                  indeterminate={selected.length > 0 && selected.length < registros.length}
-                  checked={selected.length === registros.length}
+                <Checkbox
+                  indeterminate={selected.length > 0 && selected.length < taskItems.length}
+                  checked={selected.length === taskItems.length}
                   onChange={(event) => {
                     if (event.target.checked) {
-                      setSelected(registros.map((row) => row.id));
+                      setSelected(taskItems.map((row) => row.id));
                     } else {
                       setSelected([]);
                     }
                   }}
-                />*/}
+                />
               </TableCell>
               <TableCell>Tarea</TableCell>
               <TableCell>Comentario</TableCell>
@@ -104,7 +104,7 @@ function TablaListaTareas({ registros, onDeleteClick }) {
           </TableHead>
           {/* Cuerpo de la TablaListaTareas */}
           <TableBody>
-            {registros
+            {taskItems
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
                 <TableRow
@@ -120,8 +120,8 @@ function TablaListaTareas({ registros, onDeleteClick }) {
                       onChange={() => handleCheckboxChange(row.id)}
                     />
                   </TableCell>
-                  <TableCell>{row.tarea}</TableCell>
-                  <TableCell>{row.comentario}</TableCell>
+                  <TableCell>{row.taskName}</TableCell>
+                  <TableCell>{row.comment}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -135,11 +135,11 @@ function TablaListaTareas({ registros, onDeleteClick }) {
           onClick={handleDeleteClick}
         />
       )}
+      {/* Ícono para editar, nose si usarlo */}
       {selected.length > 0 && (
         <EditIcon
           color="primary"
           style={{ cursor: 'pointer', marginTop: '10px' }}
-          //onClick={handleDeleteClick}
         />
       )}
 
@@ -147,7 +147,7 @@ function TablaListaTareas({ registros, onDeleteClick }) {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={registros.length}
+        count={taskItems.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -159,7 +159,7 @@ function TablaListaTareas({ registros, onDeleteClick }) {
 
 // Propiedades del componente
 TablaListaTareas.propTypes = {
-  registros: PropTypes.array.isRequired,
+  taskItems: PropTypes.array.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
 };
 

@@ -2,10 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DateCalendar } from '@mui/x-date-pickers';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid'; // Importa la función v4 de uuid
 
@@ -13,10 +9,8 @@ import { v4 as uuidv4 } from 'uuid'; // Importa la función v4 de uuid
 
 export default function RegistroTarea({createNewTask}) {
   const [values, setValues] = useState({
-    tarea : "",
-    comentario : "",
-    //fecha : "",
-
+    taskName : "",
+    comment : "",
   });
 
 
@@ -36,16 +30,9 @@ const handleForm = (event) => {
   createNewTask({ ...values, id });
   // Limpia los valores después de crear la tarea
   setValues({
-    tarea: "",
-    comentario: "",
-    // fecha: "",
+    taskName: "",
+    comment: "",
   });
-};
-
-
-//retorna el valor de la fecha seleccionada en el Datepicker
-const handleDateChange = (date) => {
-  //setValues.fecha = date
 };
 
 return (
@@ -60,18 +47,18 @@ return (
   >
     <TextField
       id="textBox-Tarea"
-      name="tarea"
+      name="taskName"
       label="Ingrese una tarea"
       onChange={handleInputChange}
-      value={values.tarea}
+      value={values.taskName}
       variant="outlined"
     />
     <TextField
-      id="textBox-Comentario"
+      id="textBox-comment"
       label="Ingrese un comentario"
-      name="comentario"
+      name="comment"
       onChange={handleInputChange}
-      value={values.comentario}
+      value={values.comment}
       variant="outlined"
     />
 
