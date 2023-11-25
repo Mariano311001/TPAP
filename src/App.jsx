@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import Tabla from './components/tabla'
+import TablaListaTareas from './components/tabla'
 import ItemsIngresoDatos from './components/ingresoDatos'
 
 
@@ -18,7 +18,7 @@ function App() {
       // Agrega la nueva tarea al estado previo
       setTaskItems((prevTaskItems) => [
         ...prevTaskItems,
-        { id: prevTaskItems.length, tarea: taskObjeto.tarea, comentario: taskObjeto.comentario },
+        { id: taskObjeto.id, tarea: taskObjeto.tarea, comentario: taskObjeto.comentario },
       ]);
     } else {
       // Muestra una alerta si la tarea ya existe
@@ -39,11 +39,20 @@ function App() {
     localStorage.setItem('task', JSON.stringify(taskItems));
   }, [taskItems]);
 
-  // Renderiza los componentes ItemsIngresoDatos y Tabla con los datos actuales
+  // Nueva función para manejar la eliminación de tareas
+  const handleDeleteClick = (selectedIds) => {
+    // Filtra las tareas que no están seleccionadas
+    const updatedTasks = taskItems.filter((task) => !selectedIds.includes(task.id));
+    // Actualiza el estado con la nueva lista de tareas
+    setTaskItems(updatedTasks);
+  };
+
+  // Renderiza los componentes ItemsIngresoDatos y TablaListaTareas con los datos actuales
   return (
     <>
       <ItemsIngresoDatos createNewTask={createNewTask} />
-      <Tabla registros={taskItems} />
+      {/* Pasa la función handleDeleteClick al componente TablaListaTareas */}
+      <TablaListaTareas registros={taskItems} onDeleteClick={handleDeleteClick} />
     </>
   );
 }

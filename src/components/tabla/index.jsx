@@ -9,9 +9,10 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
+import DeleteIcon from '@mui/icons-material/Delete'; // Importa el ícono de eliminación
 
-function Tabla({ registros }) {
-  // Estado para almacenar los IDs de los elementos seleccionados
+function TablaListaTareas({ registros, onDeleteClick }) {
+  // Estado para almacenar los elementos seleccionados
   const [selected, setSelected] = React.useState([]);
   
   // Estado para manejar la paginación
@@ -20,30 +21,19 @@ function Tabla({ registros }) {
   // Estado para manejar la cantidad de filas por página
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  // Cambia la página actual cuando se cambia de página
+  // Función para cambiar la página actual cuando se cambia de página
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-  // Cambia la cantidad de filas por página cuando se selecciona una nueva cantidad
+  // Función para cambiar la cantidad de filas por página cuando se selecciona una nueva cantidad
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  // Maneja el cambio del checkbox en una fila
-  const handleCheckboxChange = (event, id) => {
-    if (event.target.checked) {
-      // Agrega el ID a la lista de elementos seleccionados
-      setSelected([...selected, id]);
-    } else {
-      // Elimina el ID de la lista de elementos seleccionados
-      setSelected(selected.filter((selectedId) => selectedId !== id));
-    }
-  };
-
-  // Maneja el clic en una fila para seleccionar/deseleccionar
-  const handleRowClick = (id) => {
+  // Función para manejar el cambio del checkbox en una fila
+  const handleCheckboxChange = (id) => {
     if (selected.includes(id)) {
       // Si ya está seleccionado, lo deselecciona
       setSelected(selected.filter((selectedId) => selectedId !== id));
@@ -53,15 +43,23 @@ function Tabla({ registros }) {
     }
   };
 
-  // Verifica si un elemento está seleccionado
+  // Función para manejar el clic en el ícono de eliminación
+  const handleDeleteClick = () => {
+    // Llama a la función onDeleteClick con los IDs de los elementos seleccionados
+    onDeleteClick(selected);
+    // Limpia la lista de elementos seleccionados
+    setSelected([]);
+  };
+
+  // Función para verificar si un elemento está seleccionado
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  // Renderiza el componente de la tabla
+  // Renderiza el componente de la TablaListaTareas
   return (
     <Box sx={{ width: '100%' }}>
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
-          {/* Cabecera de la tabla */}
+          {/* Cabecera de la TablaListaTareas */}
           <TableHead>
             <TableRow>
               <TableCell>
@@ -71,10 +69,8 @@ function Tabla({ registros }) {
                   checked={selected.length === registros.length}
                   onChange={(event) => {
                     if (event.target.checked) {
-                      // Selecciona todos los elementos
                       setSelected(registros.map((row) => row.id));
                     } else {
-                      // Deselecciona todos los elementos
                       setSelected([]);
                     }
                   }}
@@ -84,7 +80,7 @@ function Tabla({ registros }) {
               <TableCell>Comentario</TableCell>
             </TableRow>
           </TableHead>
-          {/* Cuerpo de la tabla */}
+          {/* Cuerpo de la TablaListaTareas */}
           <TableBody>
             {registros
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -92,14 +88,14 @@ function Tabla({ registros }) {
                 <TableRow
                   key={row.id}
                   selected={isSelected(row.id)}
-                  onClick={() => handleRowClick(row.id)}
+                  onClick={() => handleCheckboxChange(row.id)}
                   style={{ cursor: 'pointer' }}
                 >
                   {/* Checkbox en cada fila para seleccionar/deseleccionar */}
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={isSelected(row.id)}
-                      onChange={(event) => handleCheckboxChange(event, row.id)}
+                      onChange={() => handleCheckboxChange(row.id)}
                     />
                   </TableCell>
                   <TableCell>{row.tarea}</TableCell>
@@ -109,7 +105,15 @@ function Tabla({ registros }) {
           </TableBody>
         </Table>
       </TableContainer>
-      {/* Paginación de la tabla */}
+      {/* Ícono de eliminación */}
+      {selected.length > 0 && (
+        <DeleteIcon
+          color="error"
+          style={{ cursor: 'pointer', marginTop: '10px' }}
+          onClick={handleDeleteClick}
+        />
+      )}
+      {/* Paginación de la TablaListaTareas */}
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
@@ -124,9 +128,10 @@ function Tabla({ registros }) {
 }
 
 // Propiedades del componente
-Tabla.propTypes = {
+TablaListaTareas.propTypes = {
   registros: PropTypes.array.isRequired,
+  onDeleteClick: PropTypes.func.isRequired,
 };
 
 // Exporta el componente
-export default Tabla;
+export default TablaListaTareas;

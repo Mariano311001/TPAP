@@ -7,6 +7,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateCalendar } from '@mui/x-date-pickers';
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid'; // Importa la función v4 de uuid
+
 
 
 export default function RegistroTarea({createNewTask}) {
@@ -18,7 +20,6 @@ export default function RegistroTarea({createNewTask}) {
   });
 
 
-
 const handleInputChange = (event) =>{
   const {name, value} = event.target
   setValues({
@@ -27,11 +28,18 @@ const handleInputChange = (event) =>{
   })
 }
 
-const handleForm = (event) =>{
-  event.preventDefault()
-  //console.log(values)
-  createNewTask(values)
-  localStorage.setItem("task", values)
+const handleForm = (event) => {
+  event.preventDefault();
+  // Genera un nuevo ID único con uuid
+  const id = uuidv4();
+  // Agrega el ID a los valores antes de pasarlos a createNewTask
+  createNewTask({ ...values, id });
+  // Limpia los valores después de crear la tarea
+  setValues({
+    tarea: "",
+    comentario: "",
+    // fecha: "",
+  });
 };
 
 
@@ -40,41 +48,36 @@ const handleDateChange = (date) => {
   //setValues.fecha = date
 };
 
-  return (
-    
-    <Box
-      component="form" onSubmit={handleForm}
-      sx={{
-        '& > :not(style)': { m: 1, width: '25ch' },
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <TextField
-       id="textBox-Tarea" 
-       name = "tarea"
-       label="Ingrese una tarea" 
-       onChange={handleInputChange}
-       value = {values.tarea}
-       variant="outlined" 
-       />
-      <TextField 
-      id="textBox-Comentario" 
-      label="Ingrese un comentario" 
-      name = "comentario"
+return (
+  <Box
+    component="form"
+    onSubmit={handleForm}
+    sx={{
+      '& > :not(style)': { m: 1, width: '25ch' },
+    }}
+    noValidate
+    autoComplete="off"
+  >
+    <TextField
+      id="textBox-Tarea"
+      name="tarea"
+      label="Ingrese una tarea"
       onChange={handleInputChange}
-      value = {values.comentario}
-      variant="outlined" 
-      />
-      <LocalizationProvider
-        dateAdapter={AdapterDayjs}
-        name = "fecha"
-        valueType = "date"
-        >
-          <DatePicker /*onChange={handleDateChange}*//>
-      </LocalizationProvider>
-      <Button type = "submit" variant="contained">Agregar</Button>
-    </Box>
-    
-    );
+      value={values.tarea}
+      variant="outlined"
+    />
+    <TextField
+      id="textBox-Comentario"
+      label="Ingrese un comentario"
+      name="comentario"
+      onChange={handleInputChange}
+      value={values.comentario}
+      variant="outlined"
+    />
+
+    <Button type="submit" variant="contained">
+      Agregar
+    </Button>
+  </Box>
+);
 }
