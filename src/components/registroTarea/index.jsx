@@ -7,7 +7,9 @@ import { v4 as uuidv4 } from 'uuid'; // Importa la función v4 de uuid
 
 
 
-export default function RegistroTarea({createNewTask}) {
+//Se define el componente funcional RegistroTarea.
+//Se utiliza el hook useState para inicializar el estado del componente con un objeto que contiene los valores de taskName y comment.
+export default function TaskForm({createNewTask}) {
   const [values, setValues] = useState({
     taskName : "",
     comment : "",
