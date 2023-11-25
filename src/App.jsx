@@ -6,29 +6,43 @@ import TablaListaTareas from './components/tablaListaTareas'
 import ItemsIngresoDatos from './components/registroTarea'
 
 
-
 function App() {
   // Estado para almacenar los elementos de la tarea
   const [taskItems, setTaskItems] = useState([]);
 
   // Función para crear una nueva tarea
   function createNewTask(taskObjeto) {
-    // Verifica si ya existe una tarea con el mismo nombre
-    if (!taskItems.find((task) => task.tarea === taskObjeto.tarea)) {
-      // Agrega la nueva tarea al estado previo
-      setTaskItems((prevTaskItems) => [
-        ...prevTaskItems,
-        { id: taskObjeto.id, tarea: taskObjeto.tarea, comentario: taskObjeto.comentario },
-      ]);
-    } else {
+    const palabraRegex = /^[A-Za-z]+$/;
+    // Validación del campo tarea
+    if(taskObjeto.tarea != "" && taskObjeto.tarea.length > 2)
+    {
+      if (palabraRegex.test(taskObjeto.tarea))
+      {
+        // Verifica si ya existe una tarea con el mismo nombre
+          if (!taskItems.find((task) => task.tarea === taskObjeto.tarea)) {
+            
+            // Agrega la nueva tarea al estado previo
+            setTaskItems((prevTaskItems) => [
+              ...prevTaskItems,
+              { id: taskObjeto.id, tarea: taskObjeto.tarea, comentario: taskObjeto.comentario },
+            ]);
+          }else{
+            alert("Ya existe el nombre de esta tarea");
+          }
+      }
+      else {
+        alert("El campo tarea debe contener solo palabras");
+      }
+    }
+    else {
       // Muestra una alerta si la tarea ya existe
-      alert("Ya existe el nombre de esta tarea");
+      alert("Campo tarea invalido");
     }
   }
 
   // Efecto para cargar los datos desde el almacenamiento local al cargar la página
   useEffect(() => {
-    let data = localStorage.getItem('task');
+    let data = localStorage.getItem('tasks');
     if (data) {
       setTaskItems(JSON.parse(data));
     }
@@ -36,7 +50,7 @@ function App() {
 
   // Efecto para guardar los datos en el almacenamiento local cuando taskItems cambia
   useEffect(() => {
-    localStorage.setItem('task', JSON.stringify(taskItems));
+    localStorage.setItem('tasks', JSON.stringify(taskItems));
   }, [taskItems]);
 
   // Nueva función para manejar la eliminación de tareas

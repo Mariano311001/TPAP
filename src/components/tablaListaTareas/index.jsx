@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -12,15 +12,27 @@ import Checkbox from '@mui/material/Checkbox';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
+// Define el componente funcional TablaListaTareas
 function TablaListaTareas({ registros, onDeleteClick }) {
+  // Define una clave para el almacenamiento local
+  const STORAGE_KEY = 'selectedItems';
+
   // Estado para almacenar los elementos seleccionados
   const [selected, setSelected] = React.useState([]);
-  
+
   // Estado para manejar la paginación
   const [page, setPage] = React.useState(0);
-  
+
   // Estado para manejar la cantidad de filas por página
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  // Cargar elementos seleccionados del almacenamiento local al montar el componente
+  useEffect(() => {
+    // Obtiene los elementos seleccionados del almacenamiento local o un array vacío si no hay ninguno
+    const storedSelected = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    // Establece los elementos seleccionados en el estado
+    setSelected(storedSelected);
+  }, []);
 
   // Función para cambiar la página actual cuando se cambia de página
   const handleChangePage = (event, newPage) => {
@@ -35,21 +47,30 @@ function TablaListaTareas({ registros, onDeleteClick }) {
 
   // Función para manejar el cambio del checkbox en una fila
   const handleCheckboxChange = (id) => {
-    if (selected.includes(id)) {
-      // Si ya está seleccionado, lo deselecciona
-      setSelected(selected.filter((selectedId) => selectedId !== id));
+    // Crea una copia del array de elementos seleccionados
+    const updatedSelected = [...selected];
+    // Obtiene el índice del elemento en el array
+    const index = updatedSelected.indexOf(id);
+
+    // Si el elemento ya está seleccionado, lo deselecciona
+    if (index !== -1) {
+      updatedSelected.splice(index, 1);
     } else {
-      // Si no está seleccionado, lo selecciona
-      setSelected([...selected, id]);
+      // Si el elemento no está seleccionado, lo selecciona
+      updatedSelected.push(id);
     }
+
+    // Actualiza el estado con los elementos seleccionados
+    setSelected(updatedSelected);
+    // Almacena los elementos seleccionados en el almacenamiento local
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedSelected));
   };
 
   // Función para manejar el clic en el ícono de eliminación
   const handleDeleteClick = () => {
-    // Llama a la función onDeleteClick con los IDs de los elementos seleccionados
     onDeleteClick(selected);
-    // Limpia la lista de elementos seleccionados
     setSelected([]);
+    localStorage.removeItem(STORAGE_KEY);
   };
 
   // Función para verificar si un elemento está seleccionado
@@ -65,7 +86,7 @@ function TablaListaTareas({ registros, onDeleteClick }) {
             <TableRow>
               <TableCell>
                 {/* Checkbox para seleccionar/deseleccionar todos */}
-                <Checkbox
+                {/*<Checkbox
                   indeterminate={selected.length > 0 && selected.length < registros.length}
                   checked={selected.length === registros.length}
                   onChange={(event) => {
@@ -75,7 +96,7 @@ function TablaListaTareas({ registros, onDeleteClick }) {
                       setSelected([]);
                     }
                   }}
-                />
+                />*/}
               </TableCell>
               <TableCell>Tarea</TableCell>
               <TableCell>Comentario</TableCell>
@@ -121,7 +142,7 @@ function TablaListaTareas({ registros, onDeleteClick }) {
           //onClick={handleDeleteClick}
         />
       )}
-      
+
       {/* Paginación de la TablaListaTareas */}
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
