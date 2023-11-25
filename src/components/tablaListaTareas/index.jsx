@@ -136,12 +136,12 @@ function TablaListaTareas({ taskItems, onDeleteClick }) {
         />
       )}
       {/* Ícono para editar, nose si usarlo */}
-      {selected.length > 0 && (
+      {/*selected.length > 0 && (
         <EditIcon
           color="primary"
           style={{ cursor: 'pointer', marginTop: '10px' }}
         />
-      )}
+      )*/}
 
       {/* Paginación de la TablaListaTareas */}
       <TablePagination

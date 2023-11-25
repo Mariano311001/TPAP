@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import TablaListaTareas from './components/tablaListaTareas'
-import ItemsIngresoDatos from './components/registroTarea'
+import TaskList from './components/tablaListaTareas'
+import TaskForm from './components/registroTarea'
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
@@ -61,17 +61,17 @@ function App() {
     setTaskItems(updatedTasks);
   };
 
-  // Renderiza los componentes ItemsIngresoDatos y TablaListaTareas con los datos actuales
+  // Renderiza los componentes TaskForm y TaskList con los datos actuales
   return (
     <>
       <h1 className = "titulo">Lista de tareas</h1>
       <Container maxWidth="md">
       <Box sx={{ mt: 4 }}>
-        <ItemsIngresoDatos createNewTask={createNewTask} />
+        <TaskForm createNewTask={createNewTask} />
       </Box>
       <Box sx={{ mt: 4 }}>
-        {/* Pasa la función handleDeleteClick al componente TablaListaTareas */}
-        <TablaListaTareas taskItems={taskItems} onDeleteClick={handleDeleteClick} />
+        {/* Pasa la función handleDeleteClick al componente TaskList */}
+        <TaskList taskItems={taskItems} onDeleteClick={handleDeleteClick} />
       </Box>
     </Container>
     </>
