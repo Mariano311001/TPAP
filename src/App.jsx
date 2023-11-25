@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import TablaListaTareas from './components/tabla'
-import ItemsIngresoDatos from './components/ingresoDatos'
+import TablaListaTareas from './components/tablaListaTareas'
+import ItemsIngresoDatos from './components/registroTarea'
 
 
 
@@ -22,7 +22,7 @@ function App() {
       ]);
     } else {
       // Muestra una alerta si la tarea ya existe
-      alert("Ya existe");
+      alert("Ya existe el nombre de esta tarea");
     }
   }
 

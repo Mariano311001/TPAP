@@ -9,7 +9,8 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
-import DeleteIcon from '@mui/icons-material/Delete'; // Importa el ícono de eliminación
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 function TablaListaTareas({ registros, onDeleteClick }) {
   // Estado para almacenar los elementos seleccionados
@@ -113,6 +114,14 @@ function TablaListaTareas({ registros, onDeleteClick }) {
           onClick={handleDeleteClick}
         />
       )}
+      {selected.length > 0 && (
+        <EditIcon
+          color="primary"
+          style={{ cursor: 'pointer', marginTop: '10px' }}
+          //onClick={handleDeleteClick}
+        />
+      )}
+      
       {/* Paginación de la TablaListaTareas */}
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
