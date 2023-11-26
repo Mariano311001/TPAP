@@ -12,10 +12,10 @@ import Checkbox from '@mui/material/Checkbox';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-// Define el componente funcional TablaListaTareas
-function TablaListaTareas({ taskItems, onDeleteClick }) {
+// Define el componente funcional TaskList
+function TaskList({ taskItems, onDeleteClick }) {
   // Define una clave para el almacenamiento local
-  const STORAGE_KEY = 'selectedItems';
+  const SELECTED_ITEMS = 'selectedItems';
 
   // Estado para almacenar los elementos seleccionados
   const [selected, setSelected] = React.useState([]);
@@ -29,7 +29,7 @@ function TablaListaTareas({ taskItems, onDeleteClick }) {
   // Cargar elementos seleccionados del almacenamiento local al montar el componente
   useEffect(() => {
     // Obtiene los elementos seleccionados del almacenamiento local o un array vacío si no hay ninguno
-    const storedSelected = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    const storedSelected = JSON.parse(localStorage.getItem(SELECTED_ITEMS)) || [];
     // Establece los elementos seleccionados en el estado
     setSelected(storedSelected);
   }, []);
@@ -63,25 +63,25 @@ function TablaListaTareas({ taskItems, onDeleteClick }) {
     // Actualiza el estado con los elementos seleccionados
     setSelected(updatedSelected);
     // Almacena los elementos seleccionados en el almacenamiento local
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedSelected));
+    localStorage.setItem(SELECTED_ITEMS, JSON.stringify(updatedSelected));
   };
 
   // Función para manejar el clic en el ícono de eliminación
   const handleDeleteClick = () => {
     onDeleteClick(selected);
     setSelected([]);
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(SELECTED_ITEMS);
   };
 
   // Función para verificar si un elemento está seleccionado
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  // Renderiza el componente de la TablaListaTareas
+  // Renderiza el componente de la TaskList
   return (
     <Box sx={{ width: '100%' }}>
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
-          {/* Cabecera de la TablaListaTareas */}
+          {/* Cabecera de la TaskList */}
           <TableHead>
             <TableRow>
               <TableCell>
@@ -102,7 +102,7 @@ function TablaListaTareas({ taskItems, onDeleteClick }) {
               <TableCell>Comentario</TableCell>
             </TableRow>
           </TableHead>
-          {/* Cuerpo de la TablaListaTareas */}
+          {/* Cuerpo de la TaskList */}
           <TableBody>
             {taskItems
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -143,7 +143,7 @@ function TablaListaTareas({ taskItems, onDeleteClick }) {
         />
       )*/}
 
-      {/* Paginación de la TablaListaTareas */}
+      {/* Paginación de la TaskList */}
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
@@ -158,10 +158,10 @@ function TablaListaTareas({ taskItems, onDeleteClick }) {
 }
 
 // Propiedades del componente
-TablaListaTareas.propTypes = {
+TaskList.propTypes = {
   taskItems: PropTypes.array.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
 };
 
 // Exporta el componente
-export default TablaListaTareas;
+export default TaskList;
