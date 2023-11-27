@@ -14,10 +14,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 function TaskList({ taskItems, onDeleteClick }) {
   const SELECTED_ITEMS = 'selectedItems';
 
+  // Estado para almacenar las tareas completadas
   const [completedTasks, setCompletedTasks] = React.useState([]);
+
+  //Material UI
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  // useEffect para cargar las tareas completadas del localStorage
   useEffect(() => {
     const storedSelected = JSON.parse(localStorage.getItem(SELECTED_ITEMS)) || [];
     setCompletedTasks(storedSelected);
@@ -32,9 +36,10 @@ function TaskList({ taskItems, onDeleteClick }) {
     setPage(0);
   };
 
+  // funcion de cambio de estado del checkbox al hacer clic en una tarea
   const handleCheckboxChange = (id) => {
     const updatedCompletedTasks = [...completedTasks];
-    const index = updatedCompletedTasks.indexOf(id);
+    const index = updatedCompletedTasks.indexOf(id); //Si no esta seleccionado da -1
 
     if (index !== -1) {
       updatedCompletedTasks.splice(index, 1);
@@ -42,6 +47,7 @@ function TaskList({ taskItems, onDeleteClick }) {
       updatedCompletedTasks.push(id);
     }
 
+    // se actualiza las tareas con los checkbox y se almacena en el localStorage
     setCompletedTasks(updatedCompletedTasks);
     localStorage.setItem(SELECTED_ITEMS, JSON.stringify(updatedCompletedTasks));
   };
@@ -52,6 +58,7 @@ function TaskList({ taskItems, onDeleteClick }) {
     localStorage.removeItem(SELECTED_ITEMS);
   };
 
+  // Función para verificar si una tarea esta completada
   const isTaskCompleted = (id) => completedTasks.indexOf(id) !== -1;
 
   return (
@@ -72,7 +79,7 @@ function TaskList({ taskItems, onDeleteClick }) {
                 <TableRow
                   key={row.id}
                   onClick={() => handleCheckboxChange(row.id)}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: 'pointer', background: isTaskCompleted(row.id) ? '#64ff00' : 'white' }}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
@@ -87,11 +94,14 @@ function TaskList({ taskItems, onDeleteClick }) {
           </TableBody>
         </Table>
       </TableContainer>
-      <DeleteIcon
-        color="error"
-        style={{ cursor: 'pointer', marginTop: '10px' }}
-        onClick={handleDeleteClick}
-      />
+      {/* Icono eliminar */}
+      {completedTasks.length > 0 && (
+        <DeleteIcon
+          color="error"
+          style={{ cursor: 'pointer', marginTop: '10px' }}
+          onClick={handleDeleteClick}
+        />
+      )}
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
@@ -104,10 +114,5 @@ function TaskList({ taskItems, onDeleteClick }) {
     </Box>
   );
 }
-
-TaskList.propTypes = {
-  taskItems: PropTypes.array.isRequired,
-  onDeleteClick: PropTypes.func.isRequired,
-};
 
 export default TaskList;

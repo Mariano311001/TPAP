@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid'; // Importa la función v4 de uuid
 
 
 //Se define el componente funcional RegistroTarea.
-//Se utiliza el hook useState para inicializar el estado del componente con un objeto que contiene los valores de taskName y comment.
 export default function TaskForm({createNewTask}) {
+  //Se utiliza el hook useState para inicializar el estado del componente con un objeto que contiene los valores de taskName y comment.
   const [values, setValues] = useState({
     taskName : "",
     comment : "",
@@ -26,11 +26,8 @@ const handleInputChange = (event) =>{
 
 const handleForm = (event) => {
   event.preventDefault();
-  // Genera un nuevo ID único con uuid
   const id = uuidv4();
-  // Agrega el ID a los valores antes de pasarlos a createNewTask
   createNewTask({ ...values, id });
-  // Limpia los valores después de crear la tarea
   setValues({
     taskName: "",
     comment: "",
