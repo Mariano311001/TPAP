@@ -8,8 +8,9 @@ import Container from '@mui/material/Container';
 function App() {
   const [taskItems, setTaskItems] = useState([]);
 
+  const LOCAL_STORAGE_KEY = 'tasks';
   // Función para crear una nueva tarea
-  function createNewTask(newTaskObject) {
+  function AddNewTask(newTaskObject) {
     const REGEX = /^[A-Za-z]+$/;
     if (newTaskObject.taskName !== "" && newTaskObject.taskName.length > 2) {
       if (REGEX.test(newTaskObject.taskName)) {
@@ -30,7 +31,7 @@ function App() {
   }
 
   useEffect(() => {
-    let data = localStorage.getItem('tasks');
+    let data = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (data) {
       setTaskItems(JSON.parse(data));
     }
@@ -38,7 +39,7 @@ function App() {
 
   // useEffect que guardar los datos en el localStorage
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(taskItems));
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(taskItems));
   }, [taskItems]);
 
   const handleDeleteClick = (selectedIds) => {
@@ -52,7 +53,7 @@ function App() {
       <h1 className="titulo">Lista de tareas</h1>
       <Container maxWidth="md">
         <Box sx={{ mt: 4 }}>
-          <TaskForm createNewTask={createNewTask} />
+          <TaskForm AddNewTask={AddNewTask} />
         </Box>
         <Box sx={{ mt: 4 }}>
           <TaskList taskItems={taskItems} onDeleteClick={handleDeleteClick} />

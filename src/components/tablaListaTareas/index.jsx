@@ -12,25 +12,23 @@ import Checkbox from '@mui/material/Checkbox';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 function TaskList({ taskItems, onDeleteClick }) {
-  const SELECTED_ITEMS = 'selectedItems';
+  const LOCAL_STORAGE_KEY = 'selectedItems';
 
   // Estado para almacenar las tareas completadas
-  const [completedTasks, setCompletedTasks] = React.useState([]);
+  const [selectedTasks, setSelectedTasks] = React.useState([]);
 
-  //Material UI
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  // useEffect para cargar las tareas completadas del localStorage
+  // carga las tareas completadas con los checkboxs del localStorage
   useEffect(() => {
-    const storedSelected = JSON.parse(localStorage.getItem(SELECTED_ITEMS)) || [];
-    setCompletedTasks(storedSelected);
+    const storedSelected = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || []; //Si es nulo, usa un array vacio
+    setSelectedTasks(storedSelected);
   }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -38,28 +36,28 @@ function TaskList({ taskItems, onDeleteClick }) {
 
   // funcion de cambio de estado del checkbox al hacer clic en una tarea
   const handleCheckboxChange = (id) => {
-    const updatedCompletedTasks = [...completedTasks];
-    const index = updatedCompletedTasks.indexOf(id); //Si no esta seleccionado da -1
+    const updatedSelectedTasks = [...selectedTasks];
+    const index = updatedSelectedTasks.indexOf(id);
 
     if (index !== -1) {
-      updatedCompletedTasks.splice(index, 1);
+      updatedSelectedTasks.splice(index, 1);
     } else {
-      updatedCompletedTasks.push(id);
+      updatedSelectedTasks.push(id);
     }
 
     // se actualiza las tareas con los checkbox y se almacena en el localStorage
-    setCompletedTasks(updatedCompletedTasks);
-    localStorage.setItem(SELECTED_ITEMS, JSON.stringify(updatedCompletedTasks));
+    setSelectedTasks(updatedSelectedTasks);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedSelectedTasks));
   };
 
   const handleDeleteClick = () => {
-    onDeleteClick(completedTasks);
-    setCompletedTasks([]);
-    localStorage.removeItem(SELECTED_ITEMS);
+    onDeleteClick(selectedTasks);
+    setSelectedTasks([]);
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
   };
 
-  // Función para verificar si una tarea esta completada
-  const isTaskCompleted = (id) => completedTasks.indexOf(id) !== -1;
+  // Funcion para verificar si una tarea esta completada
+  const isTaskCompleted = (id) => selectedTasks.indexOf(id) !== -1;
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -79,7 +77,7 @@ function TaskList({ taskItems, onDeleteClick }) {
                 <TableRow
                   key={row.id}
                   onClick={() => handleCheckboxChange(row.id)}
-                  style={{ cursor: 'pointer', background: isTaskCompleted(row.id) ? '#64ff00' : 'white' }}
+                  style={{ cursor: 'pointer' }}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
@@ -95,7 +93,7 @@ function TaskList({ taskItems, onDeleteClick }) {
         </Table>
       </TableContainer>
       {/* Icono eliminar */}
-      {completedTasks.length > 0 && (
+      {selectedTasks.length > 0 && (
         <DeleteIcon
           color="error"
           style={{ cursor: 'pointer', marginTop: '10px' }}

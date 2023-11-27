@@ -3,16 +3,16 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid'; // Importa la función v4 de uuid
+import { v4 as uuidv4 } from 'uuid';
 
 
 
-//Se define el componente funcional RegistroTarea.
-export default function TaskForm({createNewTask}) {
-  //Se utiliza el hook useState para inicializar el estado del componente con un objeto que contiene los valores de taskName y comment.
+//componente TaskForm.
+export default function TaskForm({AddNewTask}) {
   const [values, setValues] = useState({
     taskName : "",
     comment : "",
+    id : uuidv4(),
   });
 
 
@@ -26,11 +26,11 @@ const handleInputChange = (event) =>{
 
 const handleForm = (event) => {
   event.preventDefault();
-  const id = uuidv4();
-  createNewTask({ ...values, id });
+  AddNewTask({ ...values});
   setValues({
     taskName: "",
     comment: "",
+    id : uuidv4(),
   });
 };
 
@@ -45,7 +45,7 @@ return (
     autoComplete="off"
   >
     <TextField
-      id="textBox-Tarea"
+      id={values.id}
       name="taskName"
       label="Ingrese una tarea"
       onChange={handleInputChange}
@@ -53,7 +53,7 @@ return (
       variant="outlined"
     />
     <TextField
-      id="textBox-comment"
+      id="txtComment"
       label="Ingrese un comentario"
       name="comment"
       onChange={handleInputChange}
